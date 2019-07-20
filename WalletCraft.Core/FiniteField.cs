@@ -12,6 +12,9 @@ namespace WalletCraft.Core
             if (value >= prime)
                 throw new ArgumentOutOfRangeException($"Value cannot be greater than prime");
 
+            if (value < 0)
+                throw new ArgumentOutOfRangeException($"Value cannot be less than zero");
+
             _value = value;
             _prime = prime;
         }
@@ -25,7 +28,16 @@ namespace WalletCraft.Core
             if (a.Prime != b.Prime)
                 throw new ArgumentException("The prime number must be the same");
 
-            var value = (a.Value + b.Value) % a.Prime;
+            var value = ModuloOperation.Run(a.Value + b.Value, a.Prime);
+            return new FiniteField(value, a.Prime);
+        }
+
+        public static FiniteField operator -(FiniteField a, FiniteField b)
+        {
+            if (a.Prime != b.Prime)
+                throw new ArgumentException("The prime number must be the same");
+
+            var value = ModuloOperation.Run(a.Value - b.Value, a.Prime);
             return new FiniteField(value, a.Prime);
         }
 
