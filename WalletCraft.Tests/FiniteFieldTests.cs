@@ -85,6 +85,8 @@ namespace WalletCraft.Tests
         public static IEnumerable<object[]> ExponentiationData = new List<object[]>
         {
             new object[] { new FiniteField(3, 13), 3, new FiniteField(3, 13) },
+            new object[] { new FiniteField(7, 13), -3, new FiniteField(8, 13) },
+            new object[] { new FiniteField(17, 31), -3, new FiniteField(29, 31) },
         };
 
         [Theory]

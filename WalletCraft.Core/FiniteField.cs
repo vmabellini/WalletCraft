@@ -69,7 +69,17 @@ namespace WalletCraft.Core
         public static FiniteField Pow(FiniteField a, long pow)
         {
             long value = a.Value;
-            for (long i = 0; i < pow; i++)
+
+            long adaptedPow = pow;
+            //Convert negative pow into positive using Fermat's little theorem
+            if (pow < 0)
+            {
+                while (adaptedPow < 0)
+                    adaptedPow += a.Prime - 1;
+                adaptedPow -= 1;
+            }
+
+            for (long i = 0; i < adaptedPow; i++)
                 value = ModuloOperation.Run(value * a.Value, a.Prime);
 
             return new FiniteField(value, a.Prime);
