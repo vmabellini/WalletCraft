@@ -57,5 +57,17 @@ namespace WalletCraft.Tests
         {
             Assert.True(a - b == result);
         }
+
+        public static IEnumerable<object[]> MultiplyData = new List<object[]>
+        {
+            new object[] { new FiniteField(5, 19), new FiniteField(3, 19), new FiniteField(15, 19) },
+        };
+
+        [Theory]
+        [MemberData(nameof(MultiplyData))]
+        public void Multiply(FiniteField a, FiniteField b, FiniteField result)
+        {
+            Assert.True(a * b == result);
+        }
     }
 }
