@@ -81,5 +81,17 @@ namespace WalletCraft.Tests
         {
             Assert.True(a / b == result);
         }
+
+        public static IEnumerable<object[]> ExponentiationData = new List<object[]>
+        {
+            new object[] { new FiniteField(3, 13), 3, new FiniteField(3, 13) },
+        };
+
+        [Theory]
+        [MemberData(nameof(ExponentiationData))]
+        public void Exponentiation(FiniteField a, long pow, FiniteField result)
+        {
+            Assert.True(FiniteField.Pow(a, pow) == result);
+        }
     }
 }

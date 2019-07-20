@@ -56,6 +56,7 @@ namespace WalletCraft.Core
                 throw new ArgumentException("The prime number must be the same");
 
             //Converts the division into multiplication using Fermat's little theorem
+            //prime = 19 ===>  2/7 = 2*7 pow (19 – 2)
             var expNumber = a.Prime - 2;
 
             long expResult = a.Value;
@@ -63,6 +64,15 @@ namespace WalletCraft.Core
                 expResult = ModuloOperation.Run(expResult * b.Value, a.Prime);
 
             return new FiniteField(expResult, a.Prime);
+        }
+
+        public static FiniteField Pow(FiniteField a, long pow)
+        {
+            long value = a.Value;
+            for (long i = 0; i < pow; i++)
+                value = ModuloOperation.Run(value * a.Value, a.Prime);
+
+            return new FiniteField(value, a.Prime);
         }
 
         protected override bool EqualsCore(FiniteField other)
