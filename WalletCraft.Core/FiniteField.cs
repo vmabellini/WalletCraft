@@ -50,6 +50,21 @@ namespace WalletCraft.Core
             return new FiniteField(value, a.Prime);
         }
 
+        public static FiniteField operator /(FiniteField a, FiniteField b)
+        {
+            if (a.Prime != b.Prime)
+                throw new ArgumentException("The prime number must be the same");
+
+            //Converts the division into multiplication using Fermat's little theorem
+            var expNumber = a.Prime - 2;
+
+            long expResult = a.Value;
+            for (long i = 0; i < expNumber; i++)
+                expResult = ModuloOperation.Run(expResult * b.Value, a.Prime);
+
+            return new FiniteField(expResult, a.Prime);
+        }
+
         protected override bool EqualsCore(FiniteField other)
         {
             return _value == other.Value && _prime == other.Prime;
