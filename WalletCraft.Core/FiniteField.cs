@@ -20,6 +20,15 @@ namespace WalletCraft.Core
 
         public long Value => _value;
 
+        public static FiniteField operator+(FiniteField a, FiniteField b)
+        {
+            if (a.Prime != b.Prime)
+                throw new ArgumentException("The prime number must be the same");
+
+            var value = (a.Value + b.Value) % a.Prime;
+            return new FiniteField(value, a.Prime);
+        }
+
         protected override bool EqualsCore(FiniteField other)
         {
             return _value == other.Value && _prime == other.Prime;

@@ -8,12 +8,29 @@ namespace WalletCraft.Tests
 {
     public class FiniteFieldTests
     {
-        [Fact]
-        public void Equality()
+        public static IEnumerable<object[]> EqualityData = new List<object[]>
         {
-            Assert.Equal(new FiniteField(2, 17), new FiniteField(2, 17));
-            Assert.NotEqual(new FiniteField(2, 17), new FiniteField(3, 17));
-            Assert.NotEqual(new FiniteField(2, 17), new FiniteField(2, 13));
+            new object[] { new FiniteField(2, 17), new FiniteField(2, 17) }
+        };
+
+        public static IEnumerable<object[]> NonEqualityData = new List<object[]>
+        {
+            new object[] { new FiniteField(3, 17), new FiniteField(2, 17) },
+            new object[] { new FiniteField(2, 17), new FiniteField(2, 18) }
+        };
+
+        [Theory]
+        [MemberData(nameof(EqualityData))]
+        public void Equality(FiniteField a, FiniteField b)
+        {
+            Assert.Equal(a, b);
+        }
+
+        [Theory]
+        [MemberData(nameof(NonEqualityData))]
+        public void NonEquality(FiniteField a, FiniteField b)
+        {
+            Assert.NotEqual(a, b);
         }
     }
 }
