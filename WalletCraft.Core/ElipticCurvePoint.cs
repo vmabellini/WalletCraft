@@ -6,19 +6,24 @@ namespace WalletCraft.Core
 {
     public class ElipticCurvePoint : Equality<ElipticCurvePoint>
     {
+        private readonly long? _x;
+        private readonly long? _y;
         private readonly long _a;
         private readonly long _b;
-        private readonly long _x;
-        private readonly long _y;
 
-        public ElipticCurvePoint(long a, long b, long x, long y)
+        public ElipticCurvePoint(long? x, long? y, long a, long b)
         {
-            _a = a;
-            _b = b;
             _x = x;
             _y = y;
+            _a = a;
+            _b = b;
+
             //Constraint
             //y2 = x3 + ax + b
+
+            if (Infinity)
+                return;
+
             if ((y * y) != (x * x * x) + (a * x) + b)
                 throw new ArgumentException("Invalid values for a eliptic curve");
         }
@@ -27,9 +32,33 @@ namespace WalletCraft.Core
 
         public long B => _b;
 
-        public long X => _x;
+        public long? X => _x;
 
-        public long Y => _y;
+        public long? Y => _y;
+
+        public bool Infinity => _x == null && _y == null;
+
+        public static ElipticCurvePoint operator +(ElipticCurvePoint first, ElipticCurvePoint second)
+        {
+            if (first.A != second.A || first.B != second.B)
+                throw new ArgumentException("The points aren't on the same curve");
+
+            if (first.Infinity)
+                return second;
+            if (second.Infinity)
+                return first;
+
+            if (first.X == second.X && first.Y != second.Y) //returns infinity point
+                return new ElipticCurvePoint(null, null, first.A, first.B);
+
+            var slope = (second.Y - first.Y) / (second.X - first.X);
+
+            var x3 = (slope * slope) - first.X - second.X;
+
+            var y3 = slope * (first.X - x3) - first.Y;
+
+            return new ElipticCurvePoint(x3, y3, first.A, first.B);
+        }
 
         protected override bool EqualsCore(ElipticCurvePoint other)
         {
