@@ -48,16 +48,41 @@ namespace WalletCraft.Core
             if (second.Infinity)
                 return first;
 
-            if (first.X == second.X && first.Y != second.Y) //returns infinity point
+            //Case 1: self.x == other.x, self.y != other.y
+            //Result is point at infinity
+            if (first.X == second.X && first.Y != second.Y)
                 return new ElipticCurvePoint(null, null, first.A, first.B);
 
-            var slope = (second.Y - first.Y) / (second.X - first.X);
+            //Case 2: self.x ≠ other.x
+            if (first.X != second.X)
+            {
+                //Formula (x3,y3)==(x1,y1)+(x2,y2)
+                var slope = (second.Y - first.Y) / (second.X - first.X);
 
-            var x3 = (slope * slope) - first.X - second.X;
+                var x3 = (slope * slope) - first.X - second.X;
 
-            var y3 = slope * (first.X - x3) - first.Y;
+                var y3 = slope * (first.X - x3) - first.Y;
 
-            return new ElipticCurvePoint(x3, y3, first.A, first.B);
+                return new ElipticCurvePoint(x3, y3, first.A, first.B);
+            }
+
+            //Case 3: self == other
+            if (first == second && first.Y > 0)
+            {
+                var slope = (3 * (first.X * first.X) + first.A) / (2 * first.Y);
+
+                var x3 = (slope * slope) - 2 * first.X;
+
+                var y3 = slope * (first.X - x3) - first.Y;
+
+                return new ElipticCurvePoint(x3, y3, first.A, first.B);
+            }
+
+            //Case 4: self == other and Y == 0
+            if (first == second && first.Y == 0)
+                return new ElipticCurvePoint(null, null, first.A, first.B);
+
+            throw new InvalidOperationException("Addition error - invalid values");
         }
 
         protected override bool EqualsCore(ElipticCurvePoint other)
