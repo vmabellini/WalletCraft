@@ -31,6 +31,7 @@ namespace WalletCraft.Core
                 throw new ArgumentException("Invalid values for a eliptic curve");
         }
 
+
         public FiniteField A => _a;
 
         public FiniteField B => _b;

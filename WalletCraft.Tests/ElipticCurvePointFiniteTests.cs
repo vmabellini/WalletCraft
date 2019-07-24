@@ -42,5 +42,67 @@ namespace WalletCraft.Tests
                 new FiniteField(0, 223),
                 new FiniteField(7, 223)));
         }
+
+        public static IEnumerable<object[]> AdditionData = new List<object[]>
+        {
+            new object[] {
+                new ElipticCurvePointFinite(
+                    new FiniteField(170, 223),
+                    new FiniteField(142, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223)),
+                new ElipticCurvePointFinite(
+                    new FiniteField(60, 223),
+                    new FiniteField(139, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223)),
+                new ElipticCurvePointFinite(
+                    new FiniteField(220, 223),
+                    new FiniteField(181, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223))
+            },
+            new object[] {
+                new ElipticCurvePointFinite(
+                    new FiniteField(47, 223),
+                    new FiniteField(71, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223)),
+                new ElipticCurvePointFinite(
+                    new FiniteField(17, 223),
+                    new FiniteField(56, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223)),
+                new ElipticCurvePointFinite(
+                    new FiniteField(215, 223),
+                    new FiniteField(68, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223))
+            },
+            new object[] {
+                new ElipticCurvePointFinite(
+                    new FiniteField(143, 223),
+                    new FiniteField(98, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223)),
+                new ElipticCurvePointFinite(
+                    new FiniteField(76, 223),
+                    new FiniteField(66, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223)),
+                new ElipticCurvePointFinite(
+                    new FiniteField(47, 223),
+                    new FiniteField(71, 223),
+                    new FiniteField(0, 223),
+                    new FiniteField(7, 223))
+            },
+        };
+
+        [Theory]
+        [MemberData(nameof(AdditionData))]
+        public void Addition(ElipticCurvePointFinite a, ElipticCurvePointFinite b, ElipticCurvePointFinite result)
+        {
+            Assert.True(a + b == result);
+        }
     }
 }
