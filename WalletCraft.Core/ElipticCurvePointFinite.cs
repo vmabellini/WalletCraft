@@ -21,7 +21,7 @@ namespace WalletCraft.Core
             //Constraint
             //y2 = x3 + ax + b
 
-            if (a.Prime != b.Prime || (a.Prime != x.Prime && x != null) || (a.Prime != y.Prime && y != null))
+            if (a.Prime != b.Prime || (x != null && a.Prime != x.Prime) || (y != null && a.Prime != y.Prime))
                 throw new ArgumentException("All Finite Fields must have the same prime number");
 
             if (Infinity)
@@ -40,7 +40,7 @@ namespace WalletCraft.Core
 
         public FiniteField Y => _y;
 
-        public bool Infinity => _x == null && _y == null;
+        public bool Infinity => _x == null && _y == null || _x.Value == 0 && _y.Value == 0;
 
         public static ElipticCurvePointFinite operator +(ElipticCurvePointFinite first, ElipticCurvePointFinite second)
         {
@@ -87,6 +87,16 @@ namespace WalletCraft.Core
                 return new ElipticCurvePointFinite(null, null, first.A, first.B);
 
             throw new InvalidOperationException("Addition error - invalid values");
+        }
+
+        public static ElipticCurvePointFinite operator *(ElipticCurvePointFinite first, long second)
+        {
+            ElipticCurvePointFinite product = first;
+            for (var i = 1; i<second;i++)
+            {
+                product += first;
+            }
+            return product;
         }
 
         protected override bool EqualsCore(ElipticCurvePointFinite other)
