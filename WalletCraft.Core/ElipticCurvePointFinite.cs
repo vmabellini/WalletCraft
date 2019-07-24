@@ -4,14 +4,14 @@ using System.Text;
 
 namespace WalletCraft.Core
 {
-    public class ElipticCurvePoint : Equality<ElipticCurvePoint>
+    public class ElipticCurvePointFinite : Equality<ElipticCurvePointFinite>
     {
-        private readonly long? _x;
-        private readonly long? _y;
-        private readonly long _a;
-        private readonly long _b;
+        private readonly FiniteField _x;
+        private readonly FiniteField _y;
+        private readonly FiniteField _a;
+        private readonly FiniteField _b;
 
-        public ElipticCurvePoint(long? x, long? y, long a, long b)
+        public ElipticCurvePointFinite(FiniteField x, FiniteField y, FiniteField a, FiniteField b)
         {
             _x = x;
             _y = y;
@@ -21,6 +21,9 @@ namespace WalletCraft.Core
             //Constraint
             //y2 = x3 + ax + b
 
+            if (a.Prime != b.Prime || (a.Prime != x.Prime && x != null) || (a.Prime != y.Prime && y != null))
+                throw new ArgumentException("All Finite Fields must have the same prime number");
+
             if (Infinity)
                 return;
 
@@ -28,17 +31,17 @@ namespace WalletCraft.Core
                 throw new ArgumentException("Invalid values for a eliptic curve");
         }
 
-        public long A => _a;
+        public FiniteField A => _a;
 
-        public long B => _b;
+        public FiniteField B => _b;
 
-        public long? X => _x;
+        public FiniteField X => _x;
 
-        public long? Y => _y;
+        public FiniteField Y => _y;
 
         public bool Infinity => _x == null && _y == null;
 
-        public static ElipticCurvePoint operator +(ElipticCurvePoint first, ElipticCurvePoint second)
+        public static ElipticCurvePointFinite operator +(ElipticCurvePointFinite first, ElipticCurvePointFinite second)
         {
             if (first.A != second.A || first.B != second.B)
                 throw new ArgumentException("The points aren't on the same curve");
@@ -51,7 +54,7 @@ namespace WalletCraft.Core
             //Case 1: self.x == other.x, self.y != other.y
             //Result is point at infinity
             if (first.X == second.X && first.Y != second.Y)
-                return new ElipticCurvePoint(null, null, first.A, first.B);
+                return new ElipticCurvePointFinite(null, null, first.A, first.B);
 
             //Case 2: self.x ≠ other.x
             if (first.X != second.X)
@@ -63,29 +66,29 @@ namespace WalletCraft.Core
 
                 var y3 = slope * (first.X - x3) - first.Y;
 
-                return new ElipticCurvePoint(x3, y3, first.A, first.B);
+                return new ElipticCurvePointFinite(x3, y3, first.A, first.B);
             }
 
             //Case 3: self == other
-            if (first == second && first.Y != 0)
+            if (first == second && first.Y.Value > 0)
             {
-                var slope = (3 * (first.X * first.X) + first.A) / (2 * first.Y);
+                var slope = (new FiniteField(3, first.A.Prime) * (first.X * first.X) + first.A) / (new FiniteField(2, first.A.Prime) * first.Y);
 
-                var x3 = (slope * slope) - 2 * first.X;
+                var x3 = (slope * slope) - new FiniteField(2, first.A.Prime) * first.X;
 
                 var y3 = slope * (first.X - x3) - first.Y;
 
-                return new ElipticCurvePoint(x3, y3, first.A, first.B);
+                return new ElipticCurvePointFinite(x3, y3, first.A, first.B);
             }
 
             //Case 4: self == other and Y == 0
-            if (first == second && first.Y == 0)
-                return new ElipticCurvePoint(null, null, first.A, first.B);
+            if (first == second && first.Y.Value == 0)
+                return new ElipticCurvePointFinite(null, null, first.A, first.B);
 
             throw new InvalidOperationException("Addition error - invalid values");
         }
 
-        protected override bool EqualsCore(ElipticCurvePoint other)
+        protected override bool EqualsCore(ElipticCurvePointFinite other)
         {
             return A == other.A &&
                 B == other.B &&

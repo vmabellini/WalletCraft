@@ -27,7 +27,6 @@ namespace WalletCraft.Tests
             new object[] { new ElipticCurvePoint(2, 5, 5, 7), new ElipticCurvePoint(-1, -1, 5, 7), new ElipticCurvePoint(3, -7, 5, 7) },
             new object[] { new ElipticCurvePoint(2, 5, 5, 7), new ElipticCurvePoint(2, -5, 5, 7), new ElipticCurvePoint(null, null, 5, 7) },
             new object[] { new ElipticCurvePoint(-1, -1, 5, 7), new ElipticCurvePoint(-1, -1, 5, 7), new ElipticCurvePoint(18, 77, 5, 7) },
-            new object[] { new ElipticCurvePoint(-1, -1, 5, 7), new ElipticCurvePoint(-1, -1, 5, 7), new ElipticCurvePoint(18, 77, 5, 7) },
         };
 
         [Theory]
