@@ -102,7 +102,7 @@ namespace WalletCraft.Tests
         [MemberData(nameof(AdditionData))]
         public void Addition(ElipticCurvePointFinite a, ElipticCurvePointFinite b, ElipticCurvePointFinite result)
         {
-            Assert.True(a + b == result);
+            Assert.Equal(result, a + b);
         }
 
         public static IEnumerable<object[]> MultiplicationData = new List<object[]>

@@ -33,7 +33,7 @@ namespace WalletCraft.Tests
         [MemberData(nameof(AdditionData))]
         public void Addition(ElipticCurvePoint a, ElipticCurvePoint b, ElipticCurvePoint result)
         {
-            Assert.True(a + b == result);
+            Assert.Equal(result, a + b);
         }
     }
 }
